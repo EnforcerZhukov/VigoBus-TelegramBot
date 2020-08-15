@@ -15,6 +15,8 @@ from vigobusbot.logger import logger
 
 __all__ = ("http_request", "Methods", "AsyncResponse")
 
+DEFAULT_HEADERS = {"Accept-Charset": "UTF-8"}
+
 
 class Methods:
     GET = "GET"
@@ -23,11 +25,16 @@ class Methods:
 
 
 async def http_request(
-        method: str, url: str,
-        timeout: float, retries: int,
-        query_params: Optional[dict] = None, body: Optional[dict] = None
+        method: str,
+        url: str,
+        timeout: float,
+        retries: int,
+        query_params: Optional[dict] = None,
+        body: Optional[dict] = None,
+        headers: Optional[dict] = None
 ) -> httpx.AsyncResponse:
     last_error = None
+    headers = {**headers, **DEFAULT_HEADERS} if headers else DEFAULT_HEADERS
 
     for retry_count in range(retries):
         with logger.contextualize(
@@ -37,7 +44,8 @@ async def http_request(
             request_attempt=retry_count+1,
             request_max_attempts=retries,
             request_params=query_params,
-            request_body=body
+            request_body=body,
+            request_headers=headers
         ):
             logger.debug("Requesting URL")
 
@@ -45,11 +53,11 @@ async def http_request(
                 start_time = time.time()
                 async with httpx.AsyncClient(timeout=timeout) as client:
                     if method == Methods.GET:
-                        result = await client.get(url=url, params=query_params)
+                        result = await client.get(url=url, params=query_params, headers=headers)
                     elif method == Methods.POST:
-                        result = await client.post(url=url, params=query_params, json=body)
+                        result = await client.post(url=url, params=query_params, json=body, headers=headers)
                     elif method == Methods.DELETE:
-                        result = await client.delete(url=url, params=query_params)
+                        result = await client.delete(url=url, params=query_params, headers=headers)
 
                 response_time = round(time.time() - start_time, 4)
                 logger.bind(
