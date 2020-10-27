@@ -7,7 +7,7 @@ watchdog==0.9.0  # watch directories for file changes
 emoji==0.5.3  # replace aliases with emojis
 pydantic==1.5  # class builder
 cachetools==3.1.1  # cache
-cryptography==2.8
+cryptography==3.2
 loguru==0.4.0  # logging
 pymongo==3.10.1  # MongoDB client
 motor==2.1.0  # MongoDB Async client
