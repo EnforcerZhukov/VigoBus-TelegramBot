@@ -5,7 +5,7 @@ pyyaml==5.1.2  # YAML file parser
 addict==2.2.1  # better dicts
 watchdog==0.9.0  # watch directories for file changes
 emoji==0.5.3  # replace aliases with emojis
-pydantic==1.5  # class builder
+pydantic==1.6.2  # class builder
 cachetools==3.1.1  # cache
 cryptography==2.8
 loguru==0.4.0  # logging
